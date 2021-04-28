@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 5f;
+    [SerializeField] private float _normalSpeed = 5f;
     [SerializeField] private float _fireRate = 0.5f;
     [SerializeField] private float _canFire = -1f;
-    [SerializeField] private float _speedMultiplier = 2;
+    [SerializeField] private float _powerupSpeed = 2f;
+    [SerializeField] private float _thrusterSpeed = 1f;
 
     [SerializeField] private GameObject _laserPrefab;   
     [SerializeField] private GameObject _laserSpawn;
@@ -70,6 +71,9 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
+        // Framework Thruster
+        Thrusters();
+
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
         {
             ShootLaser();
@@ -84,7 +88,7 @@ public class Player : MonoBehaviour
 
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);  
         
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(direction * _normalSpeed * Time.deltaTime);
 
 
         transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y, -3.8f, 0), transform.position.z);
@@ -96,6 +100,18 @@ public class Player : MonoBehaviour
         else if (transform.position.x < -11)
         {
             transform.position = new Vector3(11, transform.position.y, transform.position.z);
+        }
+    }
+
+    void Thrusters()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _normalSpeed *= _thrusterSpeed;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _normalSpeed /= _thrusterSpeed;
         }
     }
 
@@ -163,7 +179,7 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
         _speedBoostEnabled = true;
-        _speed *= _speedMultiplier;
+        _normalSpeed *= _powerupSpeed;
         StartCoroutine(SpeedBoostPowerDownRoutine());
     }
 
@@ -171,7 +187,7 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5.0f);
         _speedBoostEnabled = false;
-        _speed /= _speedMultiplier;
+        _normalSpeed /= _powerupSpeed;
     }
 
     public void ShieldsActive()

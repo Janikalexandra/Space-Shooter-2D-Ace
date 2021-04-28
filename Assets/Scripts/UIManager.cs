@@ -23,7 +23,8 @@ public class UIManager : MonoBehaviour
 
     private Game_Manager _gameManager;
 
-    [SerializeField] private Sprite[] _liveSprites;
+    [SerializeField] 
+    private Sprite[] _liveSprites;
 
     // Start is called before the first frame update
     void Start()
@@ -48,8 +49,6 @@ public class UIManager : MonoBehaviour
 
     public void UpdateLives(int currentLives)
     {
-        //display img sprite
-        //give new one based on the currentLives index
         _LivesImg.sprite = _liveSprites[currentLives];
 
         if(currentLives == 0)

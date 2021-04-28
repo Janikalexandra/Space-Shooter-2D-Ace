@@ -1024,10 +1024,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a97228f2b931acf4ba292708f6dfab92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _normalSpeed: 5
   _fireRate: 0.15
   _canFire: -1
-  _speedMultiplier: 2
+  _powerupSpeed: 2
+  _thrusterSpeed: 1.2
   _laserPrefab: {fileID: 4787004128510204655, guid: b04ba80741b4ef84292a110886b6bdf3, type: 3}
   _laserSpawn: {fileID: 73343108}
   _shield: {fileID: 508805247}
