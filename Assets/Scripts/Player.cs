@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _tripleShotSpawn;
 
     [SerializeField] private int _lives = 3;
+    [SerializeField] private int _shieldLives = 0;
     [SerializeField] private int _score;
 
     [SerializeField] private bool _tripleShotActive = false;
@@ -35,14 +36,21 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
 
+    public HealthBar healthBar;
+
     // Start is called before the first frame update
     void Start()
     {
+
 
         _playerAudioSource = GetComponent<AudioSource>();
 
         ui_Manager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        
+
+        healthBar = GameObject.FindGameObjectWithTag("ShieldHealth").GetComponent<HealthBar>();
+        healthBar.SetHealth(0);
 
         if(_playerAudioSource == null)
         {
@@ -147,34 +155,55 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        if(_shieldActive == true)
+        if (_shieldActive == true)
         {
-            _shieldActive = false;
-            _shield.SetActive(false);
-            return;
+            //Shield Strength
+            if (_shieldLives == 3)
+            {
+                _shieldLives -= 1;
+                healthBar.SetHealth(2);
+                return;
+            }
+
+            if (_shieldLives == 2)
+            {
+                _shieldLives -= 1;
+                healthBar.SetHealth(1);
+                return;
+            }
+
+            if (_shieldLives == 1)
+            {
+                _shieldLives -= 1;
+                healthBar.SetHealth(0);
+                _shieldActive = false;
+                _shield.SetActive(false);
+                return;
+            }
         }
 
-        _lives -= 1;
+            _lives -= 1;
 
-        // Enable right engine smoke
-        if(_lives == 2)
-        {
-            _rightEngine.SetActive(true);
-        }
-        // Enabel left engine smoke
-        if(_lives == 1)
-        {
-            _leftEngine.SetActive(true);
-        }
+            // Enable right engine smoke
+            if (_lives == 2)
+            {
+                _rightEngine.SetActive(true);
+            }
+            // Enabel left engine smoke
+            if (_lives == 1)
+            {
+                _leftEngine.SetActive(true);
+            }
 
-        ui_Manager.UpdateLives(_lives);
+            ui_Manager.UpdateLives(_lives);
 
-        if(_lives < 1)
-        {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
-        }
-    }
+            if (_lives < 1)
+            {
+                _spawnManager.OnPlayerDeath();
+                Destroy(this.gameObject);
+            }
+ }
+
 
     public void SpeedBoostActive()
     {
@@ -192,6 +221,8 @@ public class Player : MonoBehaviour
 
     public void ShieldsActive()
     {
+        _shieldLives = 3;
+        healthBar.SetHealth(3);
         _shield.SetActive(true);
         _shieldActive = true;
     }

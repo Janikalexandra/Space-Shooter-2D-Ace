@@ -81,9 +81,7 @@ public class Enemy : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
-        {
-            //Player player = other.transform.GetComponent<Player>();
-            
+        {                   
             if(_player != null)
             {
                 _player.Damage();
